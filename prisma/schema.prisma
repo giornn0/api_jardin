@@ -31,5 +31,17 @@ model Contacto{
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now())
   jardin Jardin @relation(fields: [jardin_id], references: [id])
-  jardin_id Int @unique
-}
+  jardin_id Int 
+  }
+
+
+  model User {
+     id  Int @id @default(autoincrement())
+     nombre_completo String @db.VarChar(50)
+     email String @db.VarChar(50)
+     pass  String @db.VarChar(255)
+     token String @db.VarChar(255)
+     tipo  String @db.VarChar(255)
+     created_at  DateTime @default(now())
+     updated_at  DateTime @default(now())
+  }
