@@ -25,8 +25,7 @@ export const registerUser = async ({
       tipo,
     },
   });
-  if (tipo != "dueño") return await genToken(result);
-  await createColegio(body.colegio);
+  if (tipo === "dueño") await createColegio(body.colegio,result.id);
   return await genToken(result);
 };
 // Login
