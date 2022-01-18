@@ -1,13 +1,14 @@
 import express from"express";
 import bodyParser from "body-parser"
 import{registerUser,loginUser} from "./controllers/users.controller.js"
-
+import {authRegister} from "./middlewares/authRegister.js"
+import {authLogin} from "./middlewares/authLogin.js"
+import {authUser} from "./middlewares/authUser.js"
 
 const app = express();
-
 app.use(bodyParser.json())
 
-app.post("/user",async (req,res,next)=>{
+app.post("/user",authRegister,async (req,res,next)=>{
   try {
     const result = await registerUser(req.body);
     res.status(201).json(result);
@@ -15,9 +16,18 @@ app.post("/user",async (req,res,next)=>{
     next(error)
   }
 })
-app.post("/login",async (req,res,next)=>{
+
+app.post("/login",authLogin,async (req,res,next)=>{
   try {
     const result = await loginUser(req.body);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error)
+  }
+})
+app.get("/testingTokenValidation",authUser,async (req,res,next)=>{
+  try {
+    const result = req.user
     res.status(201).json(result);
   } catch (error) {
     next(error)
