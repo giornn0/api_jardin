@@ -1,63 +1,24 @@
-const express = require("express");
-const {PrismaClient, Prisma} = require("@prisma/client")
+import express from"express";
+import bodyParser from "body-parser"
+import{registerUser,loginUser} from "./controllers/users.controller.js"
 
-const prisma = new PrismaClient();
+
 const app = express();
 
-app.get("/jardines",async (req,res,next)=>{
+app.use(bodyParser.json())
+
+app.post("/user",async (req,res,next)=>{
   try {
-    const result = await prisma.jardin.findMany()
-    res.status(200).json(result)
+    const result = await registerUser(req.body);
+    res.status(201).json(result);
   } catch (error) {
     next(error)
   }
 })
-app.post("/jardines",async (req,res,next)=>{
+app.post("/login",async (req,res,next)=>{
   try {
-    const {nombre,domicilio,telefono,email} = req.body
-    const result = await prisma.jardin.create({
-      data:{
-        nombre,
-        domicilio,
-        telefono,
-        email,
-      }
-    })
-    res.status(201).json(result)
-  } catch (error) {
-    next(error)
-  }
-})
-app.put("/jardines/:id",async (req,res,next)=>{
-  try {
-    const {nombre,domicilio,telefono,email} = req.body
-    const {id} = req.params
-    const result = await prisma.jardin.update({
-      where:{id: Number(id)},
-      data:{
-        nombre,
-        domicilio,
-        telefono,
-        email,
-      }
-    })
-    res.status(202).json(result)
-  } catch (error) {
-    next(error)
-  }
-})
-app.post("/contacto",async(req,res,next)=>{
-  try {
-    const {telefono,email,detalles,jardin_id} = req.body
-    const result = await prisma.contacto.create({
-      data:{
-        telefono,
-        email,
-        detalles,
-        jardin_id
-      }
-    })
-    res.status(201).json(result)
+    const result = await loginUser(req.body);
+    res.status(201).json(result);
   } catch (error) {
     next(error)
   }
@@ -65,8 +26,13 @@ app.post("/contacto",async(req,res,next)=>{
 
 app.use((err,req,res,next)=>{
   const statusCode = err.statusCode | 500;
-  console.log(statusCode, err.message);
-  res.status(statusCode).json({message:err.message});
+  try {
+    const {statusCode,message} = JSON.parse(err.message)
+    console.log(statusCode, message);
+    res.status(statusCode).json({message});
+  } catch (error) {
+    res.status(statusCode).json({message:err.message});
+  }
 })
 
 app.listen(process.env.PORT? process.env.PORT : 3500, ()=>{

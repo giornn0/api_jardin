@@ -11,36 +11,42 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Jardin{ 
+model User {
   id  Int @id @default(autoincrement())
+  nombre_completo String @db.VarChar(50)
+  telefono String @db.VarChar(50)
+  email String @db.VarChar(50) @unique
+  pass  String @db.VarChar(255)
+  token String? @db.VarChar(255)
+  tipo  String @db.VarChar(255)
+  colegio Colegio?
   created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model Colegio{ 
+  id  Int @id @default(autoincrement())
+  tipo String @db.VarChar(50)
   nombre String @db.VarChar(50)
   estado Boolean @default(true)
   domicilio String @db.VarChar(255)
   telefono String @db.VarChar(50)
   email String @db.VarChar(50)
   contactos Contacto[]
-  
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int @unique
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 model Contacto{ 
   id  Int @id @default(autoincrement())
   telefono String @db.VarChar(50)
   email String @db.VarChar(50)
   detalles String @db.VarChar(255)
+  colegio Colegio @relation(fields: [colegio_id], references: [id])
+  colegio_id Int 
   created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
-  jardin Jardin @relation(fields: [jardin_id], references: [id])
-  jardin_id Int
+  updated_at  DateTime @updatedAt
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  telefono String @db.VarChar(50)
-  email String @db.VarChar(50)
-  detalles String @db.VarChar(255)
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
-  name    String?
-}
+
