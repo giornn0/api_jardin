@@ -1,6 +1,16 @@
 import PrismaClient from "@prisma/client"
 const prisma = new PrismaClient.PrismaClient();
 
+//get all Colegios simple paginator
+export const getAllColegios = async({page,take,search})=>{
+  const skip = page &&take?(page-1)*take:0
+  const result = await prisma.colegio.findMany({
+    skip,
+    take: take? Number(take):30,
+  })
+  return result;
+}
+
 // crea un user 
 export const createColegio = async (body,user_id)=>{
   const {nombre,domicilio,telefono,email,tipo} = body
