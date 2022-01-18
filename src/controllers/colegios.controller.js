@@ -1,50 +1,39 @@
-import PrismaClient from "@prisma/client"
-const prisma = new PrismaClient.PrismaClient();
-
+import {erase,edit,getAll} from "../services/colegios.services.js"
 //get all Colegios simple paginator
-export const getAllColegios = async({page,take,search})=>{
-  const skip = page &&take?(page-1)*take:0
-  const result = await prisma.colegio.findMany({
-    skip,
-    take: take? Number(take):30,
-  })
-  return result;
+export const getAllColegios = async (req, res,next)=>{
+  try {
+    const result = await getAll(req.query)
+    res.status(200).json(result)
+  } catch (error) {
+    next(error)
+  }
 }
-
 // crea un user 
-export const createColegio = async (body,user_id)=>{
-  const {nombre,domicilio,telefono,email,tipo} = body
-  const result = await prisma.colegio.create({
-    data:{
-      nombre,
-      domicilio,
-      telefono,
-      email,
-      tipo,
-      user_id
-    }
-  })
-  return result
+export const createColegio = async (req, res,next)=> {
+  try {
+    const result = await create(req.body,req.user)
+    res.status(201).json(result)
+  } catch (error) {
+    next(error)
+  }
 }
 //edita
-export const editColegio = async(body,id)=>{
-  const {nombre,domicilio,telefono,email,tipo} = body
-  const result = await prisma.colegio.create({
-    where:{id:Number(id)},
-    data:{
-      nombre,
-      domicilio,
-      telefono,
-      email,
-      tipo,
-    }
-  })
-  return result
-
+export const editColegio =  async (req, res,next)=> {
+  try {
+    const result = await edit(req.body,req.params.id)
+    res.status(202).json(result)
+  } catch (error) {
+    next(error)
+  }
 }
 //elimina 
-export const deleteColegio = async(id)=>{
-  const result = await prisma.colegio.delete({
-    where:{id:Number(id)}
-  })
+export const deleteColegio = async(req,res,next)=>{
+  async (req, res,next)=> {
+    try {
+      const result = await erase(req.params.id)
+      res.status(202).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

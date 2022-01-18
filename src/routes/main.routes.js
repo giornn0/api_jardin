@@ -4,7 +4,6 @@ import {authRegister} from "../middlewares/authRegister.js"
 import {authLogin} from "../middlewares/authLogin.js"
 import {authUser} from "../middlewares/authUser.js"
 import {registerUser,loginUser} from "../controllers/users.controller.js"
-
 import userRoutes from "./user.routes.js"
 import colegioRoutes from "./colegio.routes.js"
 
