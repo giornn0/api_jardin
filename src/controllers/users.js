@@ -1,8 +1,0 @@
-
-// Registra
-
-// Login
-
-//edita
-
-//elimina 
