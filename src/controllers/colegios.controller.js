@@ -1,4 +1,4 @@
-import {erase,edit,getAll} from "../services/colegios.services.js"
+import {erase,edit,getAll,create} from "../services/colegios.services.js"
 //get all Colegios simple paginator
 export const getAllColegios = async (req, res,next)=>{
   try {
@@ -11,7 +11,7 @@ export const getAllColegios = async (req, res,next)=>{
 // crea un user 
 export const createColegio = async (req, res,next)=> {
   try {
-    const result = await create(req.body,req.user)
+    const result = await create(req.body,req.user.id)
     res.status(201).json(result)
   } catch (error) {
     next(error)
