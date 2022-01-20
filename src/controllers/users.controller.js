@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import PrismaClient from "@prisma/client";
 import { createColegio } from "./colegios.controller.js";
+import { edit, erase } from "../services/users.services.js";
 import dotenv from "dotenv";
 
 const prisma = new PrismaClient.PrismaClient();
@@ -40,32 +41,25 @@ export const loginUser = async ({ email, pass }) => {
   return await genToken(user);
 };
 //edita
-export const editUser = async (body, id) => {
-  const { nombre_completo, pass, telefono, email, tipo } = body;
-  let data = {
-    nombre_completo,
-    telefono,
-    email,
-    tipo,
-  };
-  if (pass) {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(pass, salt);
-    data.pass = hash;
+export const editUser = async (req, res)=> {
+  try {
+    if(req.user.id != req.params.id) return res.status(401).json({message:"Sin autorización"})
+    const result = await edit(req.body,req.params.id)
+    res.status(200).json(result)
+  } catch (error) {
+    next(error)
   }
-  const result = await prisma.user.update({
-    where: { id: Number(id) },
-    data,
-  });
-  return result;
-};
+}
 //elimina
-export const deleteUser = async (id) => {
-  const result = await prisma.user.delete({
-    where: { id: Number(id) },
-  });
-  return result;
-};
+export const deleteUser =  async (req, res)=> {
+  try {
+    if(req.user.id != req.params.id) return res.status(401).json({message:"Sin autorización"})
+    const result = await erase(req.params.id)
+    res.status(200).json(result)
+  } catch (error) {
+    next(error)
+  }
+}
 
 const genToken = async ({ id, tipo, nombre_completo }) => {
   let token = await jwt.sign(
