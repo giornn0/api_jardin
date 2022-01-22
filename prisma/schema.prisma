@@ -30,6 +30,7 @@ model Colegio{
   nombre String @db.VarChar(50)
   estado Boolean @default(true)
   domicilio String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
   telefono String @db.VarChar(50)
   email String @db.VarChar(50)
   contactos Contacto[]

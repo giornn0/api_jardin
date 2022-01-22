@@ -1,16 +1,20 @@
 import PrismaClient from "@prisma/client"
+import {paginator} from "../utils.js"
 const prisma = new PrismaClient.PrismaClient();
 
 export const getAll =  async({page,take,search})=>{
   const skip = page &&take?(page-1)*take:0
-  const result = await prisma.colegio.findMany({
-    skip,
-    take: take? Number(take):30,
-  })
-  return result;
+  const [data,count] = await Promise.allSettled([
+    prisma.colegio.findMany({
+      skip,
+      take: take? Number(take):30,
+    }),
+    prisma.colegio.count()
+  ])
+  return paginator({data:data.value,count:count.value,page,take});
 }
-export const create =  async (body,user_id)=>{
-  const {nombre,domicilio,telefono,email,tipo} = body
+export const create =  async (values,user_id)=>{
+  const {nombre,domicilio,telefono,email,tipo} = values
   const result = await prisma.colegio.create({
     data:{
       nombre,
@@ -23,17 +27,10 @@ export const create =  async (body,user_id)=>{
   })
   return result
 }
-export const edit  =  async(body,id)=>{
-  const {nombre,domicilio,telefono,email,tipo} = body
+export const edit  =  async(values,id)=>{
   const result = await prisma.colegio.create({
     where:{id:Number(id)},
-    data:{
-      nombre,
-      domicilio,
-      telefono,
-      email,
-      tipo,
-    }
+    data:values
   })
   return result
 }

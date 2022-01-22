@@ -7,28 +7,5 @@ export const authRegister = validate([
   body('email').notEmpty().isEmail(),
   body('pass').notEmpty().isLength({ min: 6 ,max:30}),
   body('telefono').isLength({ min: 6,max:12 }),
-<<<<<<< HEAD
-  body('tipo').notEmpty().isLength({min:4,max:5}),
-  body('photo').custom((value,{req}) =>{
-
-    let file= req.file;
-    let acceptedExtensions = ['.jpg','.png','.gif','.jpeg'];
-
-    if(!file){
-      throw new Error("Subir una imagen")
-    }else{
-      let fileExtensions = path.extname(file.originalname)
-      if(!acceptedExtensions.includes(fileExtensions)){
-        throw new Error(
-          `Las extensiones permitidas son ${acceptedExtensions.join(',')}`
-        )
-      }
-    }
-     return true
-  })
-  
-])
-=======
   body('tipo').isLength({min:4,max:5}),
 ])
->>>>>>> a88bdad4694a9607cad4c46d81449a68ab34b819
