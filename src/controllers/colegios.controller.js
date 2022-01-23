@@ -20,7 +20,8 @@ export const createColegio = async (req, res,next)=> {
 //edita
 export const editColegio =  async (req, res,next)=> {
   try {
-    const result = await edit(req.body,req.params.id)
+    const values = Object.assign(req.colegio,req.body)
+    const result = await edit(values,req.params.id)
     res.status(202).json(result)
   } catch (error) {
     next(error)
@@ -28,12 +29,10 @@ export const editColegio =  async (req, res,next)=> {
 }
 //elimina 
 export const deleteColegio = async(req,res,next)=>{
-  async (req, res,next)=> {
     try {
       const result = await erase(req.params.id)
       res.status(202).json(result)
     } catch (error) {
       next(error)
     }
-  }
 }

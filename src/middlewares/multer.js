@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     cb(null, `./public/colegios/${req.user.id}`);    
   }, 
   filename: function (req, file, cb) { 
-     cb(null , `profile${path.extname(file.originalname)}`);   
+    cb(null , `profile${path.extname(file.originalname)}`);   
   }
 });
 

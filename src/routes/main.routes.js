@@ -27,7 +27,7 @@ router.post("/login",authLogin,async (req,res,next)=>{
   }
 })
 
-router.use(authUser)
+ router.use(authUser)
 router.use("/users",userRoutes)
 router.use("/colegios",colegioRoutes)
 
